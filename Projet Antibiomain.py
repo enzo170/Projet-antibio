@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import logging
 
-# Configuration des dossiers
+# Folder configuration
 INPUT_FOLDER = "input"
 OUTPUT_FOLDER = "output"
 IMAGES_FOLDER = "images"
@@ -13,7 +13,7 @@ os.makedirs(INPUT_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 os.makedirs(IMAGES_FOLDER, exist_ok=True)
 
-# Configuration de logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def filter_data_for_line_graph(data):
@@ -69,6 +69,9 @@ def plot_line_graph(data):
     plt.savefig(output_path)
     plt.close()
     logging.info(f"Line graph saved to {output_path}.")
+    
+    # Affichage du graphique
+    plt.show()
 
 def plot_violin_graph(data, sample_type):
     """Create a violin graph for cecal and ileal bacteria."""
@@ -93,6 +96,11 @@ def plot_violin_graph(data, sample_type):
     plt.savefig(output_path)
     plt.close()
     logging.info(f"{sample_type.capitalize()} violin graph saved to {output_path}.")
+    
+    # Affichage des graphiques
+    plt.show()
+
+
 
 def main():
     # Load CSV files
