@@ -70,7 +70,7 @@ def plot_line_graph(data):
     plt.close()
     logging.info(f"Line graph saved to {output_path}.")
     
-    # Affichage du graphique
+    # Graphic display
     plt.show()
 
 def plot_violin_graph(data, sample_type):
@@ -97,7 +97,7 @@ def plot_violin_graph(data, sample_type):
     plt.close()
     logging.info(f"{sample_type.capitalize()} violin graph saved to {output_path}.")
     
-    # Affichage des graphiques
+    # Graphics display
     plt.show()
 
 
