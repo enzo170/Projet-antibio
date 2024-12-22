@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def filter_data_for_line_graph(data):
     """Filter data for the line graph."""
-    required_columns = ["sample_type", "mouse_id", "treatment", "experimental_day", "frequency_live_bacteria"]
+    required_columns = ["sample_type", "mouse_ID", "treatment", "experimental_day", "frequency_live_bacteria"]
     missing_columns = [col for col in required_columns if col not in data.columns]
     if missing_columns:
         logging.warning(f"Missing columns for the line graph: {missing_columns}")
@@ -56,7 +56,7 @@ def plot_line_graph(data):
         x="experimental_day",
         y="frequency_live_bacteria",
         hue="treatment",
-        style="mouse_id",
+        style="mouse_ID",
         markers=True,
         dashes=False
     )
