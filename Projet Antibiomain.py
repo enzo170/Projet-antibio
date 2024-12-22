@@ -16,28 +16,33 @@ os.makedirs(IMAGES_FOLDER, exist_ok=True)
 # Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def filter_data_for_line_graph(data):
-    """Filter data for the line graph."""
-    required_columns = ["sample_type", "mouse_ID", "treatment", "experimental_day", "frequency_live_bacteria"]
+# List of required columns for each graph
+LINE_GRAPH_COLUMNS = ["sample_type", "mouse_ID", "treatment", "experimental_day", "frequency_live_bacteria"]
+VIOLIN_GRAPH_COLUMNS = ["sample_type", "treatment", "frequency_live_bacteria"]
+
+def check_missing_columns(data, required_columns):
+    """Check for missing columns in the data."""
     missing_columns = [col for col in required_columns if col not in data.columns]
     if missing_columns:
-        logging.warning(f"Missing columns for the line graph: {missing_columns}")
+        logging.warning(f"Missing columns: {missing_columns}")
+    return missing_columns
+
+def filter_data_for_line_graph(data):
+    """Filter data for the line graph."""
+    if check_missing_columns(data, LINE_GRAPH_COLUMNS):
         return pd.DataFrame()
-    filtered = data[data["sample_type"] == "fecal"]
-    return filtered[required_columns]
+    return data[data["sample_type"] == "fecal"][LINE_GRAPH_COLUMNS]
 
 def filter_data_for_violin_graph(data, sample_type):
     """Filter data for the violin graph."""
-    required_columns = ["sample_type", "treatment", "experimental_day", "frequency_live_bacteria"]
-    missing_columns = [col for col in required_columns if col not in data.columns]
-    if missing_columns:
-        logging.warning(f"Missing columns for the violin graph: {missing_columns}")
+    if check_missing_columns(data, VIOLIN_GRAPH_COLUMNS):
         return pd.DataFrame()
-    filtered = data[(data["sample_type"] == sample_type) & (data["experimental_day"] == 7)]
-    return filtered[required_columns]
+    filtered_data = data[data["sample_type"] == sample_type][VIOLIN_GRAPH_COLUMNS]
+    logging.info("Data for {}:\n{}".format(sample_type, filtered_data))
+    return filtered_data
 
 def save_filtered_data(filtered_data, filename):
-    """Save filtered data to CSV."""
+    """Save filtered data to a CSV file."""
     if filtered_data.empty:
         logging.warning(f"No data to save for {filename}.")
         return
@@ -48,7 +53,7 @@ def save_filtered_data(filtered_data, filename):
 def plot_line_graph(data):
     """Create a line graph for fecal bacteria."""
     if data.empty:
-        logging.warning("No data for line graph.")
+        logging.warning("No data for the line graph.")
         return
     plt.figure(figsize=(10, 6))
     sns.lineplot(
@@ -60,7 +65,7 @@ def plot_line_graph(data):
         markers=True,
         dashes=False
     )
-    plt.title("Fecal Bacteria Evolution")
+    plt.title("Evolution of Fecal Bacteria")
     plt.xlabel("Experimental Day")
     plt.ylabel("Percentage of Live Bacteria")
     plt.legend(title="Treatment")
@@ -69,14 +74,11 @@ def plot_line_graph(data):
     plt.savefig(output_path)
     plt.close()
     logging.info(f"Line graph saved to {output_path}.")
-    
-    # Graphic display
-    plt.show()
 
 def plot_violin_graph(data, sample_type):
     """Create a violin graph for cecal and ileal bacteria."""
     if data.empty:
-        logging.warning(f"No data for {sample_type} violin graph.")
+        logging.warning(f"No data for the violin graph ({sample_type}).")
         return
     plt.figure(figsize=(10, 6))
     sns.violinplot(
@@ -95,16 +97,11 @@ def plot_violin_graph(data, sample_type):
     output_path = os.path.join(IMAGES_FOLDER, f"violin_graph_{sample_type}.png")
     plt.savefig(output_path)
     plt.close()
-    logging.info(f"{sample_type.capitalize()} violin graph saved to {output_path}.")
-    
-    # Graphics display
-    plt.show()
-
-
+    logging.info(f"Violin graph ({sample_type}) saved to {output_path}.")
 
 def main():
-    # Load CSV files
-    file = "data_small.csv"  # Nom du fichier attendu
+    # File path
+    file = "data_small.csv" #HERE it's only for small, choose the one you want but put the csv file in the input file (small,medium,large,huge)
     filepath = os.path.join(INPUT_FOLDER, file)
 
     if not os.path.exists(filepath):
@@ -114,9 +111,18 @@ def main():
     logging.info(f"Processing file: {file}")
 
     try:
-        data = pd.read_csv(filepath)
+        # Read the file with the correct separator
+        data = pd.read_csv(filepath, sep=';')
     except Exception as e:
         logging.error(f"Error loading file {file}: {e}")
+        return
+
+    # Check columns
+    actual_columns = data.columns.tolist()
+    logging.info(f"Columns found in the file: {actual_columns}")
+    missing_columns = check_missing_columns(data, LINE_GRAPH_COLUMNS + VIOLIN_GRAPH_COLUMNS)
+    if missing_columns:
+        logging.error(f"The following columns are missing from the CSV file: {missing_columns}")
         return
 
     # Filter data
