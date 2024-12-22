@@ -1,26 +1,29 @@
-# Function to generate the README file
-def generate_readme():
-    """Generate a README.md file for the project."""
-    readme_content = """
-# **Analyse de données biologiques : Evolution des bactéries vivantes**
+Instructions pour lancer et utiliser le programme:
 
-## **Description**
-Ce programme Python traite les données biologiques d'un fichier CSV pour analyser la fréquence des bactéries vivantes dans différents échantillons (fécaux, cécaux, et iléaux). Il génère :
-1. Des fichiers CSV filtrés.
-2. Des graphiques :
-   - Un graphique en courbes pour les données fécales.
-   - Des graphiques en violon pour les données cécales et iléales.
+# Description
+- Ce programme Python analyse la fréquence des bactéries vivantes dans différents échantillons (fécaux, cécaux, iléaux).
+- Il génère des fichiers CSV filtrés et des graphiques :
+  - Des graphiques en courbes pour les échantillons concernant la matière fécale des souris.
+  - Des graphiques en violon pour les données concernant la caecum et l'ileum des souris.
 
----
+## Prérequis
+- Python 3.8 ou supérieur
+- Bibliothèques Python :
+  - `pandas`
+  - `matplotlib`
+  - `seaborn`
 
-## **Prérequis**
-1. **Python 3.8 ou supérieur**.
-2. Les bibliothèques Python suivantes :
-   - `pandas`
-   - `matplotlib`
-   - `seaborn`
+### Installation des bibliothèques
+- Exécutez la commande suivante pour installer les bibliothèques nécessaires :
+  ```sh
+  pip install pandas matplotlib seaborn
 
-### Installation des dépendances :
-Pour installer les bibliothèques nécessaires, exécutez la commande suivante :
-```bash
-pip install pandas matplotlib seaborn
+
+
+
+Limitations fonctionnelles de notre programme:
+
+# Graphiques différents
+- Notre programme renvoie des graphiques qui ne ressemblent pas exactement aux graphiques attendus. Ces différences sont dûes à de potentielles erreurs:
+      - Erreurs au niveau de la lecture des fichiers csv, problèmes de lecture au niveau des lignes ou au niveau des colonnes du fichier pris en compte.
+      - Erreurs au niveau du code, imprécisions possibles dans l'appellation des variables par exemple.
